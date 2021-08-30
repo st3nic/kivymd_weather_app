@@ -1,0 +1,106 @@
+<ContentNavigationDrawer>:
+
+    ScrollView:
+
+        MDList:
+            AnchorLayout:
+                anchor_x: "left"
+                size_hint_y: None
+
+            MDLabel:
+                text: "Weather App"
+                font_style: "Button"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+
+            OneLineIconListItem:
+                text: "Home"
+                on_press:
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = "scr 1"
+
+                IconLeftWidget:
+                    icon: "weather-cloudy"
+
+            OneLineIconListItem:
+                text: "Settings"
+                on_press:
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = "scr 2"
+
+                IconLeftWidget:
+                    icon: "cog-outline"
+
+MDScreen:
+
+    MDToolbar:
+        id: toolbar
+        pos_hint: {"top": 1}
+        elevation: 10
+        title: "Weather App"
+        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+        right_action_items: [["weather-cloudy"]]
+
+    MDNavigationLayout:
+        x: toolbar.height
+
+        ScreenManager:
+            id: screen_manager
+
+            MDScreen:
+                name: "scr 1"
+
+                MDTextField:
+                    id: city
+                    hint_text: "Enter City with country code"
+                    helper_text: "i.e London,GB"
+                    helper_text_mode: "on_focus"
+                    pos_hint: {"center_y": 0.5,"center_x": 0.5}
+                    size_hint_x:None
+                    width:280
+
+                MDRoundFlatButton:
+                    text:"Search"
+                    pos_hint: {"center_y": 0.4,"center_x": 0.5}
+                    on_press:
+                        app.get_weather()
+                        screen_manager.current = "scr 3"
+
+            MDScreen:
+                name: "scr 2"
+
+                MDTextField:
+                    id: apikey
+                    text: app.get_settings()
+                    hint_text: "API Key"
+                    helper_text_mode: "on_focus"
+                    pos_hint: {"center_y": 0.5,"center_x": 0.5}
+                    size_hint_x:None
+                    width:280
+                    
+                MDRoundFlatButton:
+                    text:"Save"
+                    pos_hint: {"center_y": 0.4,"center_x": 0.5}
+                    on_press: app.save_settings()
+
+            MDScreen:
+                id: results
+                name: "scr 3"
+                on_pre_enter:
+                    app.results()
+
+                on_leave:
+                    results.clear_widgets()
+
+
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            ContentNavigationDrawer:
+                screen_manager: screen_manager
+                nav_drawer: nav_drawer
+
+    
+
+    
