@@ -6,6 +6,7 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.list import IconLeftWidget, OneLineListItem, OneLineIconListItem, TwoLineListItem
 from kivy.storage.jsonstore import JsonStore
+from kivy.uix.image import Image, AsyncImage
 import requests
 
 store = JsonStore('settings.json')
@@ -43,9 +44,11 @@ class WeatherApp(MDApp):
                 MDLabel(text=str(self.resp['main']['temp']) + '°C',pos_hint={"center_y": 0.6,"center_x": 0.5})
             )
 
+        self.root.ids.results.add_widget(
+                AsyncImage(source="http://openweathermap.org/img/wn/" + self.resp['weather'][0]['icon'] + '@2x.png')
+        )
+
         
-
-
 class ContentNavigationDrawer(MDBoxLayout):
     screen_manager = ObjectProperty()
     nav_drawer = ObjectProperty()
